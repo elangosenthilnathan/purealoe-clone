@@ -32,6 +32,6 @@ jobs:
       shell: bash
       run: |
         export PMD_JAVA_OPTS="-Xmx32g"
-        ./sl analyze --verbose --apex --app "${GITHUB_REPOSITORY_OWNER}_${GITHUB_REPOSITORY#*/}" . -- --apex.threads 4 
+        ./sl analyze --analysis-timeout 240m --cpg-generation-timeout 240m --verbose --apex --app "${GITHUB_REPOSITORY_OWNER}_${GITHUB_REPOSITORY#*/}" . -- --apex.threads 4 
       env:
         SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
