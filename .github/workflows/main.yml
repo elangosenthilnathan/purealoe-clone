@@ -11,15 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     #container: shiftleft/core:latest
 
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
+    # permissions:
+    #   actions: read
+    #   contents: read
+    #   security-events: write
 
     steps:
    
-      - uses: elangosenthilnathan/Qwiet-preZero@v6
-        with:
-          shiftleft-access-token: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
-          verbose: false # not mandatory
-          importGitHub: false # not mandatory
+      # - uses: elangosenthilnathan/Qwiet-preZero@v6
+      #   with:
+      #     shiftleft-access-token: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
+      #     verbose: true # not mandatory
+      #     importGitHub: false # not mandatory
+    - uses: actions/checkout@v4      
+    - name: Download ShiftLeft CLI
+      run: |
+        curl https://cdn.shiftleft.io/download/sl > ./sl && chmod a+rx ./sl 
+
+    - name: Run sl analyze 1
+      shell: bash
+      run: |
+        export PMD_JAVA_OPTS="-Xmx32g"
+        ./sl analyze --verbose --apex --app "${GITHUB_REPOSITORY_OWNER}_${GITHUB_REPOSITORY#*/}" . -- --apex.threads 4 
+      env:
+        SHIFTLEFT_ACCESS_TOKEN: ${{ secrets.SHIFTLEFT_ACCESS_TOKEN }}
